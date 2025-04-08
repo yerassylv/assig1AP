@@ -26,11 +26,20 @@ func main() {
 }
 
 func proxyToOrderService(c *gin.Context) {
-
 	url := "http://localhost:8081" + c.Request.URL.Path
-	resp, err := http.Get(url)
+	req, err := http.NewRequest(c.Request.Method, url, c.Request.Body)
 	if err != nil {
-		log.Println("Error in proxy to Order Service:", err)
+		log.Println("Error in creating request:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error in request forwarding"})
+		return
+	}
+
+	req.Header = c.Request.Header
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error in proxying request:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Order Service unavailable"})
 		return
 	}
@@ -42,9 +51,20 @@ func proxyToOrderService(c *gin.Context) {
 func proxyToInventoryService(c *gin.Context) {
 
 	url := "http://localhost:8080" + c.Request.URL.Path
-	resp, err := http.Get(url) // Для GET запросов
+
+	req, err := http.NewRequest(c.Request.Method, url, c.Request.Body)
 	if err != nil {
-		log.Println("Error in proxy to Inventory Service:", err)
+		log.Println("Error in creating request:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error in request forwarding"})
+		return
+	}
+
+	req.Header = c.Request.Header
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error in proxying request:", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Inventory Service unavailable"})
 		return
 	}
