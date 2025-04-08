@@ -11,7 +11,6 @@ type OrderHandler struct {
 	usecase usecase.OrderUseCase
 }
 
-// NewOrderHandler регистрирует маршруты для заказов
 func NewOrderHandler(router *gin.Engine, uc usecase.OrderUseCase) {
 	handler := &OrderHandler{usecase: uc}
 
@@ -22,7 +21,6 @@ func NewOrderHandler(router *gin.Engine, uc usecase.OrderUseCase) {
 	router.GET("/orders", handler.ListOrders)
 }
 
-// CreateOrder — создание нового заказа
 func (h *OrderHandler) CreateOrder(c *gin.Context) {
 	var order domain.Order
 
@@ -40,7 +38,6 @@ func (h *OrderHandler) CreateOrder(c *gin.Context) {
 	c.JSON(http.StatusCreated, gin.H{"message": "Order created"})
 }
 
-// GetOrderByID — получение заказа по ID
 func (h *OrderHandler) GetOrderByID(c *gin.Context) {
 	id := c.Param("id")
 
@@ -53,7 +50,6 @@ func (h *OrderHandler) GetOrderByID(c *gin.Context) {
 	c.JSON(http.StatusOK, order)
 }
 
-// UpdateOrderStatus — обновление статуса заказа
 func (h *OrderHandler) UpdateOrderStatus(c *gin.Context) {
 	id := c.Param("id")
 	var updatedOrder domain.Order
@@ -63,7 +59,7 @@ func (h *OrderHandler) UpdateOrderStatus(c *gin.Context) {
 		return
 	}
 
-	updatedOrder.ID = id // Привязываем ID из URL
+	updatedOrder.ID = id
 
 	err := h.usecase.UpdateOrderStatus(c.Request.Context(), &updatedOrder)
 	if err != nil {
@@ -74,7 +70,6 @@ func (h *OrderHandler) UpdateOrderStatus(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Order status updated"})
 }
 
-// DeleteOrder — удаление заказа
 func (h *OrderHandler) DeleteOrder(c *gin.Context) {
 	id := c.Param("id")
 
@@ -87,7 +82,6 @@ func (h *OrderHandler) DeleteOrder(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "Order deleted"})
 }
 
-// ListOrders — получение списка заказов
 func (h *OrderHandler) ListOrders(c *gin.Context) {
 	orders, err := h.usecase.ListOrders(c.Request.Context(), nil)
 	if err != nil {

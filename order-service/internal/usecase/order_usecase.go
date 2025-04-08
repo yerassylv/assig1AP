@@ -17,7 +17,6 @@ type orderUseCase struct {
 	repo domain.OrderRepository
 }
 
-// NewOrderUseCase создаёт новый usecase для заказов
 func NewOrderUseCase(repo domain.OrderRepository) OrderUseCase {
 	return &orderUseCase{repo: repo}
 }

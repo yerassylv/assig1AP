@@ -12,20 +12,17 @@ type productRepository struct {
 	collection *mongo.Collection
 }
 
-// NewProductRepository создает новый репозиторий
 func NewProductRepository(db *mongo.Database) domain.ProductRepository {
 	return &productRepository{
 		collection: db.Collection("products"),
 	}
 }
 
-// Create — создает новый товар
 func (r *productRepository) Create(ctx context.Context, p *domain.Product) error {
 	_, err := r.collection.InsertOne(ctx, p)
 	return err
 }
 
-// GetByID — получить товар по ID
 func (r *productRepository) GetByID(ctx context.Context, id string) (*domain.Product, error) {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -40,7 +37,6 @@ func (r *productRepository) GetByID(ctx context.Context, id string) (*domain.Pro
 	return &product, nil
 }
 
-// Update — обновить товар
 func (r *productRepository) Update(ctx context.Context, p *domain.Product) error {
 	objID, err := primitive.ObjectIDFromHex(p.ID)
 	if err != nil {
@@ -58,7 +54,6 @@ func (r *productRepository) Update(ctx context.Context, p *domain.Product) error
 	return err
 }
 
-// Delete — удалить товар
 func (r *productRepository) Delete(ctx context.Context, id string) error {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -68,7 +63,6 @@ func (r *productRepository) Delete(ctx context.Context, id string) error {
 	return err
 }
 
-// List — список всех товаров
 func (r *productRepository) List(ctx context.Context, filter map[string]interface{}) ([]*domain.Product, error) {
 	cursor, err := r.collection.Find(ctx, filter)
 	if err != nil {

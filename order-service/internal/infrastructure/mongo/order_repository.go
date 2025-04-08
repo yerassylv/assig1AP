@@ -12,20 +12,17 @@ type orderRepository struct {
 	collection *mongo.Collection
 }
 
-// NewOrderRepository создает новый репозиторий для заказов
 func NewOrderRepository(db *mongo.Database) domain.OrderRepository {
 	return &orderRepository{
 		collection: db.Collection("orders"),
 	}
 }
 
-// Create — создает новый заказ
 func (r *orderRepository) Create(ctx context.Context, o *domain.Order) error {
 	_, err := r.collection.InsertOne(ctx, o)
 	return err
 }
 
-// GetByID — получает заказ по ID
 func (r *orderRepository) GetByID(ctx context.Context, id string) (*domain.Order, error) {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -40,7 +37,6 @@ func (r *orderRepository) GetByID(ctx context.Context, id string) (*domain.Order
 	return &order, nil
 }
 
-// Update — обновляет статус заказа
 func (r *orderRepository) Update(ctx context.Context, o *domain.Order) error {
 	objID, err := primitive.ObjectIDFromHex(o.ID)
 	if err != nil {
@@ -55,7 +51,6 @@ func (r *orderRepository) Update(ctx context.Context, o *domain.Order) error {
 	return err
 }
 
-// Delete — удаляет заказ по ID
 func (r *orderRepository) Delete(ctx context.Context, id string) error {
 	objID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -65,7 +60,6 @@ func (r *orderRepository) Delete(ctx context.Context, id string) error {
 	return err
 }
 
-// List — получает список заказов
 func (r *orderRepository) List(ctx context.Context, filter map[string]interface{}) ([]*domain.Order, error) {
 	cursor, err := r.collection.Find(ctx, filter)
 	if err != nil {

@@ -17,7 +17,6 @@ type productUseCase struct {
 	repo domain.ProductRepository
 }
 
-// NewProductUseCase — конструктор usecase
 func NewProductUseCase(repo domain.ProductRepository) ProductUseCase {
 	return &productUseCase{repo: repo}
 }
